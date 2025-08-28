@@ -7,24 +7,50 @@ const bcrypt=require("bcrypt");
 const app = express()
 app.use(express.json()); //middleware to parse JSON bodies
 
-app.post("/signup",async(req, res) => {
+app.post("/signup", async(req, res) => {
  
   try {
      //validation on data signup api
   validateSignupData(req)
-  const {firstName,lastName,emailId,password}=req.body
+  const {firstName, lastName, emailId, password}=req.body
   
   //encryption the password
   const hashPassword = await bcrypt.hash(password,10)
   console.log(hashPassword);
   
     const user= new User({
-      firstName,lastName,emailId,password:hashPassword
+      firstName,
+      lastName,
+      emailId,
+      password:hashPassword
     });
     const savedUser = await user.save();
     res.status(201).json({message: "User created successfully", user: savedUser});
   } catch (error) {
     res.status(500).json({message: "Error creating user", error: error.message});//error handling
+  }
+})
+//user login api
+app.post("/login", async(req,res)=>{
+  try {
+    const {emailId,password}=req.body
+
+   const user = await User.findOne({emailId:emailId})
+   if(!user){
+    throw new Error("Invalid Credentials");
+    
+   }
+    const isPasswordValid = await bcrypt.compare(password,user.password)
+    if(isPasswordValid){
+      res.status(200).json({message:"user login Successfully",user})
+    }else{
+      throw new Error("Invalid Credentials");
+      
+    }
+
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user", error: error.message }); //error handling
+  
   }
 })
 //get user by emailId
