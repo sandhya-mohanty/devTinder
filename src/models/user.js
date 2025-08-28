@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const validator =require("validator");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -17,10 +17,22 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      validate(value){
+        if(!validator.isEmail(value)){
+          throw new Error("email id is not valid");
+          
+        }
+      }
     },
     password: {
       type: String,
       required: true,
+       validate(value){
+        if(!validator.isStrongPassword(value)){
+          throw new Error("Enter strong password");
+          
+        }
+      }
     },
     age: {
       type: Number,
@@ -36,6 +48,12 @@ const userSchema = new mongoose.Schema(
     },
     photoUrl: {
       type: String,
+       validate(value){
+        if(!validator.isURL(value)){
+          throw new Error("photoURL  is not valid");
+          
+        }
+      },
       default:
         "https://nationalchaplains.us/wp-content/uploads/2021/07/dummy-profile-pic.jpg",
     },

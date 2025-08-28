@@ -81,7 +81,9 @@ app.patch("/user/:id",async(req,res)=>{
       throw new Error("update not allowed");
       
     }
-
+    // if(updateData?.skills.length >10){
+    //   throw new Error("skills can not be add more than 10")
+    // }
     const users= await User.findByIdAndUpdate({_id:userId},updateData,{new:true,runValidators:true})
     if(!users){     
       res.status(404).json({message:"user not found"})
