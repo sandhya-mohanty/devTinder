@@ -61,4 +61,12 @@ authRouter.post("/login", async (req, res) => {
       .json({ message: "Error fetching user", error: error.message }); //error handling
   }
 });
+
+//logout api
+authRouter.post("/logout",async(req,res)=>{
+res.cookie("token",null,{
+  expires:new Date(Date.now())
+})
+res.send("Logout Successfully!!!")
+})
 module.exports=authRouter;
