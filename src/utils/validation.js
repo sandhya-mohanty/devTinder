@@ -11,4 +11,19 @@ const validateSignupData=(req)=>{
     throw new Error("Please Enter valid password");
   }
 }
-module.exports={validateSignupData}
+
+
+const validateEditProfile=(req)=>{
+const allowedEditProfile=[
+  "firstName",
+  "lastName",
+  "age",
+  "about",
+  "skills",
+  "gender",
+  "photoUrl"
+]
+const isEditAllowed = Object.keys(req.body).every((field)=>allowedEditProfile.includes(field));
+return isEditAllowed
+}
+module.exports={validateSignupData,validateEditProfile}
